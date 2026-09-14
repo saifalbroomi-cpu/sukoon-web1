@@ -18,8 +18,8 @@ const INSTAGRAM_URL = "https://www.instagram.com/wearsukoon.om/";
 const HERO_IMAGE = {
   src: "/sukoon-fabric-hero.jpg",
   alt: "",
-  width: 1280,
-  height: 720,
+  width: 1600,
+  height: 900,
 } as const;
 
 const LOGO = {
@@ -33,73 +33,47 @@ export default function ComingSoon() {
   const heroRef = useRef<HTMLElement>(null);
   const backdropMediaRef = useRef<HTMLDivElement>(null);
   const copyRef = useRef<HTMLDivElement>(null);
-  const cursorDotRef = useRef<HTMLDivElement>(null);
-  const cursorRingRef = useRef<HTMLDivElement>(null);
-
   const parallax = useRef({ x: 0, y: 0, tx: 0, ty: 0 });
-  const cursorPos = useRef({ x: -100, y: -100 });
-  const ringPos = useRef({ x: -100, y: -100 });
-
-  const [customCursor, setCustomCursor] = useState(false);
+  const rafRef = useRef<number | null>(null);
   const [reducedMotion, setReducedMotion] = useState(false);
 
   useEffect(() => {
     const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const pointerQuery = window.matchMedia("(hover: hover) and (pointer: fine)");
-
-    const sync = () => {
-      setReducedMotion(motionQuery.matches);
-      setCustomCursor(pointerQuery.matches && !motionQuery.matches);
-    };
-
+    const sync = () => setReducedMotion(motionQuery.matches);
     sync();
     motionQuery.addEventListener("change", sync);
-    pointerQuery.addEventListener("change", sync);
-    return () => {
-      motionQuery.removeEventListener("change", sync);
-      pointerQuery.removeEventListener("change", sync);
-    };
+    return () => motionQuery.removeEventListener("change", sync);
   }, []);
 
   useEffect(() => {
-    document.documentElement.classList.toggle("has-custom-cursor", customCursor);
     return () => {
-      document.documentElement.classList.remove(
-        "has-custom-cursor",
-        "cursor-hover",
-      );
+      if (rafRef.current != null) cancelAnimationFrame(rafRef.current);
     };
-  }, [customCursor]);
+  }, []);
 
-  useEffect(() => {
-    if (reducedMotion) return;
+  const ensureTick = useCallback(() => {
+    if (rafRef.current != null) return;
 
-    let frame = 0;
     const tick = () => {
       const p = parallax.current;
-      p.tx += (p.x - p.tx) * 0.07;
-      p.ty += (p.y - p.ty) * 0.07;
+      p.tx += (p.x - p.tx) * 0.08;
+      p.ty += (p.y - p.ty) * 0.08;
 
       if (backdropMediaRef.current) {
-        backdropMediaRef.current.style.transform = `translate3d(${p.tx * 10}px, ${p.ty * 6}px, 0)`;
+        backdropMediaRef.current.style.transform = `translate3d(${p.tx * 6}px, ${p.ty * 4}px, 0)`;
       }
       if (copyRef.current) {
-        copyRef.current.style.transform = `translate3d(${p.tx * -2.5}px, ${p.ty * -1.8}px, 0)`;
+        copyRef.current.style.transform = `translate3d(${p.tx * -1.5}px, ${p.ty * -1}px, 0)`;
       }
 
-      if (customCursor && cursorDotRef.current && cursorRingRef.current) {
-        ringPos.current.x += (cursorPos.current.x - ringPos.current.x) * 0.16;
-        ringPos.current.y += (cursorPos.current.y - ringPos.current.y) * 0.16;
-        cursorDotRef.current.style.transform = `translate3d(${cursorPos.current.x}px, ${cursorPos.current.y}px, 0)`;
-        cursorRingRef.current.style.transform = `translate3d(${ringPos.current.x}px, ${ringPos.current.y}px, 0)`;
-      }
-
-      frame = requestAnimationFrame(tick);
+      const still =
+        Math.abs(p.x - p.tx) < 0.001 && Math.abs(p.y - p.ty) < 0.001;
+      if (!still) rafRef.current = requestAnimationFrame(tick);
+      else rafRef.current = null;
     };
 
-    frame = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(frame);
-  }, [reducedMotion, customCursor]);
+    rafRef.current = requestAnimationFrame(tick);
+  }, []);
 
   const onHeroMove = useCallback(
     (event: MouseEvent<HTMLElement>) => {
@@ -111,28 +85,16 @@ export default function ComingSoon() {
       const ny = ((event.clientY - rect.top) / rect.height - 0.5) * 2;
       parallax.current.x = Math.max(-1, Math.min(1, nx));
       parallax.current.y = Math.max(-1, Math.min(1, ny));
+      ensureTick();
     },
-    [reducedMotion],
+    [reducedMotion, ensureTick],
   );
 
   const onHeroLeave = useCallback(() => {
     parallax.current.x = 0;
     parallax.current.y = 0;
-  }, []);
-
-  useEffect(() => {
-    if (!customCursor) return;
-    const onMove = (event: globalThis.MouseEvent) => {
-      cursorPos.current.x = event.clientX;
-      cursorPos.current.y = event.clientY;
-    };
-    window.addEventListener("mousemove", onMove);
-    return () => window.removeEventListener("mousemove", onMove);
-  }, [customCursor]);
-
-  const setHover = (active: boolean) => {
-    document.documentElement.classList.toggle("cursor-hover", active);
-  };
+    ensureTick();
+  }, [ensureTick]);
 
   const scrollToVision = (event: MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
@@ -147,25 +109,16 @@ export default function ComingSoon() {
   return (
     <>
       <div className="noise" aria-hidden="true" />
-      {customCursor ? (
-        <>
-          <div ref={cursorDotRef} className="cursor-dot" aria-hidden="true" />
-          <div ref={cursorRingRef} className="cursor-ring" aria-hidden="true" />
-        </>
-      ) : null}
 
-      {/* Full-bleed fabric atmosphere — no framed box */}
       <div className="page-backdrop" aria-hidden="true">
-        <div
-          ref={backdropMediaRef}
-          className="page-backdrop__media will-change-transform"
-        >
+        <div ref={backdropMediaRef} className="page-backdrop__media">
           <div className="hero-media absolute inset-0">
             <Image
               src={HERO_IMAGE.src}
               alt={HERO_IMAGE.alt}
               fill
               priority
+              quality={70}
               className="object-cover object-center"
               sizes="100vw"
             />
@@ -180,8 +133,6 @@ export default function ComingSoon() {
           href="#our-vision"
           onClick={scrollToVision}
           className="site-nav__link"
-          onMouseEnter={() => setHover(true)}
-          onMouseLeave={() => setHover(false)}
         >
           Our Vision
         </a>
@@ -192,26 +143,16 @@ export default function ComingSoon() {
           ref={heroRef}
           onMouseMove={onHeroMove}
           onMouseLeave={onHeroLeave}
-          className="relative flex min-h-dvh flex-col items-center justify-center overflow-hidden px-6 py-24 sm:px-10"
+          className="relative flex min-h-dvh flex-col items-center justify-center overflow-hidden px-5 py-24 sm:px-10"
           aria-label="Coming soon"
         >
           <div
-            className="ambient-light left-[6%] top-[10%]"
-            aria-hidden="true"
-          />
-          <div
-            className="ambient-light bottom-[6%] right-[4%]"
-            style={{ animationDelay: "-11s" } as CSSProperties}
-            aria-hidden="true"
-          />
-
-          <div
             ref={copyRef}
-            className="relative z-10 flex w-full max-w-[720px] flex-col items-center text-center will-change-transform"
+            className="relative z-10 flex w-full max-w-[900px] flex-col items-center text-center"
           >
-            <div className="logo-reveal relative mx-auto mb-10 w-[min(78vw,360px)] sm:mb-12 sm:w-[min(54vw,420px)] md:mb-14 md:w-[440px]">
+            <div className="logo-reveal relative mx-auto mb-10 w-[min(72vw,340px)] sm:mb-12 sm:w-[min(50vw,400px)] md:mb-14 md:w-[420px]">
               <div
-                className="pointer-events-none absolute left-1/2 top-1/2 h-[140%] w-[120%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(244,239,230,0.55)_0%,rgba(244,239,230,0)_70%)]"
+                className="pointer-events-none absolute left-1/2 top-1/2 h-[140%] w-[120%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(244,239,230,0.5)_0%,rgba(244,239,230,0)_70%)]"
                 aria-hidden="true"
               />
               <Image
@@ -221,22 +162,22 @@ export default function ComingSoon() {
                 height={LOGO.height}
                 priority
                 className="relative h-auto w-full select-none"
-                sizes="(max-width: 640px) 78vw, 440px"
+                sizes="(max-width: 640px) 72vw, 420px"
               />
             </div>
 
             <h1
-              className="font-sans text-[clamp(1.55rem,6.2vw,4.1rem)] font-normal uppercase leading-none tracking-[0.26em] text-ink sm:tracking-[0.36em]"
+              className="whitespace-nowrap font-sans text-[clamp(1.35rem,5.2vw,3.75rem)] font-normal uppercase leading-none tracking-[0.22em] text-ink sm:tracking-[0.3em] md:tracking-[0.34em]"
               aria-label="Coming Soon"
             >
-              <span className="inline-block pl-[0.26em] sm:pl-[0.36em]">
+              <span className="inline-block pl-[0.22em] sm:pl-[0.3em] md:pl-[0.34em]">
                 {TITLE.split("").map((char, index) => (
                   <span
                     key={`${char}-${index}`}
                     className="char"
                     style={
                       {
-                        animationDelay: `${1 + index * 0.045}s`,
+                        animationDelay: `${0.85 + index * 0.04}s`,
                       } as CSSProperties
                     }
                   >
@@ -246,7 +187,7 @@ export default function ComingSoon() {
               </span>
             </h1>
 
-            <p className="tagline-reveal mt-6 font-display text-[1.05rem] font-light italic tracking-wide text-brown sm:mt-7 sm:text-[1.22rem]">
+            <p className="tagline-reveal mt-6 font-display text-[1.05rem] font-light italic tracking-wide text-brown sm:mt-7 sm:text-[1.2rem]">
               Something worth waiting for.
             </p>
           </div>
@@ -261,8 +202,6 @@ export default function ComingSoon() {
             rel="noopener noreferrer"
             className="ig-link ig-reveal font-sans text-[0.62rem] font-light tracking-[0.18em] text-chocolate/80 transition-colors duration-500 hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brown sm:text-[0.68rem]"
             aria-label="Sukoon on Instagram, @wearsukoon.om"
-            onMouseEnter={() => setHover(true)}
-            onMouseLeave={() => setHover(false)}
           >
             @wearsukoon.om
           </a>
