@@ -32,9 +32,6 @@ export const metadata: Metadata = {
     description:
       "Sukoon is a modern clothing brand. Something worth waiting for.",
   },
-  icons: {
-    icon: "/favicon.ico",
-  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
