@@ -9,6 +9,7 @@ import {
   type CSSProperties,
   type MouseEvent,
 } from "react";
+import OurVision from "@/components/OurVision";
 
 const TITLE = "COMING SOON";
 const INSTAGRAM_URL = "https://www.instagram.com/wearsukoon.om/";
@@ -143,7 +144,8 @@ export default function ComingSoon() {
         </>
       ) : null}
 
-      <div className="relative flex min-h-dvh items-center justify-center overflow-hidden bg-milk px-3 py-6 sm:px-8 sm:py-10 md:px-12">
+      <div className="relative bg-milk">
+        <section className="relative flex min-h-dvh items-center justify-center overflow-hidden px-3 py-6 sm:px-8 sm:py-10 md:px-12">
         <div
           className="ambient-light left-[6%] top-[10%]"
           aria-hidden="true"
@@ -256,6 +258,9 @@ export default function ComingSoon() {
             </a>
           </div>
         </div>
+        </section>
+
+        <OurVision />
       </div>
     </>
   );
