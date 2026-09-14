@@ -59,8 +59,13 @@ body {
   overflow: hidden;
 }
 
+.page-backdrop__media {
+  position: absolute;
+  inset: -4%;
+}
+
 .page-backdrop img {
-  transform: scale(1.04);
+  transform: none;
 }
 
 .page-backdrop__wash {
@@ -68,9 +73,10 @@ body {
   inset: 0;
   background: linear-gradient(
     180deg,
-    rgba(244, 239, 230, 0.42) 0%,
-    rgba(244, 239, 230, 0.28) 40%,
-    rgba(244, 239, 230, 0.5) 100%
+    rgba(244, 239, 230, 0.55) 0%,
+    rgba(244, 239, 230, 0.32) 35%,
+    rgba(244, 239, 230, 0.45) 70%,
+    rgba(244, 239, 230, 0.62) 100%
   );
 }
 
@@ -79,8 +85,8 @@ body {
   inset: 0;
   background: radial-gradient(
     ellipse at center,
-    transparent 40%,
-    rgba(61, 43, 31, 0.18) 100%
+    transparent 35%,
+    rgba(61, 43, 31, 0.2) 100%
   );
 }
 
@@ -227,47 +233,31 @@ body {
 
 /* ─── Stage / entrance ─── */
 
-.stage {
-  opacity: 0;
-  transform: translate3d(0, 18px, 0) scale(0.985);
-  animation: stage-in 1.8s cubic-bezier(0.22, 1, 0.36, 1) 0.15s forwards;
-  box-shadow:
-    0 30px 80px -40px rgba(61, 43, 31, 0.35),
-    0 12px 28px -18px rgba(61, 43, 31, 0.18);
-}
-
-@keyframes stage-in {
-  to {
-    opacity: 1;
-    transform: translate3d(0, 0, 0) scale(1);
-  }
-}
-
 .hero-media {
-  transform: scale(1.08);
-  animation: hero-reveal 2.4s cubic-bezier(0.22, 1, 0.36, 1) 0.35s both,
-    hero-drift 28s ease-in-out 2.5s infinite alternate;
+  transform: scale(1.06);
+  animation: hero-reveal 2.4s cubic-bezier(0.22, 1, 0.36, 1) 0.2s both,
+    hero-drift 32s ease-in-out 2.4s infinite alternate;
 }
 
 @keyframes hero-reveal {
   from {
     opacity: 0;
-    transform: scale(1.14);
-    filter: blur(8px);
+    transform: scale(1.12);
+    filter: blur(6px);
   }
   to {
     opacity: 1;
-    transform: scale(1.08);
+    transform: scale(1.06);
     filter: blur(0);
   }
 }
 
 @keyframes hero-drift {
   from {
-    transform: scale(1.08) translate3d(0, 0, 0);
+    transform: scale(1.06) translate3d(0, 0, 0);
   }
   to {
-    transform: scale(1.14) translate3d(-1.2%, 0.6%, 0);
+    transform: scale(1.1) translate3d(-0.8%, 0.4%, 0);
   }
 }
 
@@ -495,7 +485,6 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .noise,
   .ambient-light,
-  .stage,
   .hero-media,
   .logo-reveal,
   .char,

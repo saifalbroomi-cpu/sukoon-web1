@@ -14,10 +14,10 @@ import OurVision from "@/components/OurVision";
 const TITLE = "COMING SOON";
 const INSTAGRAM_URL = "https://www.instagram.com/wearsukoon.om/";
 
-/** Swap this path to replace the fashion hero without redesigning the page. */
+/** Full-page fashion backdrop — swap path to change campaign visual. */
 const HERO_IMAGE = {
   src: "/sukoon-fabric-hero.jpg",
-  alt: "Editorial close-up of cream and brown Sukoon fabrics",
+  alt: "",
   width: 1280,
   height: 720,
 } as const;
@@ -30,8 +30,8 @@ const LOGO = {
 } as const;
 
 export default function ComingSoon() {
-  const stageRef = useRef<HTMLDivElement>(null);
-  const mediaRef = useRef<HTMLDivElement>(null);
+  const heroRef = useRef<HTMLElement>(null);
+  const backdropMediaRef = useRef<HTMLDivElement>(null);
   const copyRef = useRef<HTMLDivElement>(null);
   const cursorDotRef = useRef<HTMLDivElement>(null);
   const cursorRingRef = useRef<HTMLDivElement>(null);
@@ -80,8 +80,8 @@ export default function ComingSoon() {
       p.tx += (p.x - p.tx) * 0.07;
       p.ty += (p.y - p.ty) * 0.07;
 
-      if (mediaRef.current) {
-        mediaRef.current.style.transform = `translate3d(${p.tx * 14}px, ${p.ty * 9}px, 0)`;
+      if (backdropMediaRef.current) {
+        backdropMediaRef.current.style.transform = `translate3d(${p.tx * 10}px, ${p.ty * 6}px, 0)`;
       }
       if (copyRef.current) {
         copyRef.current.style.transform = `translate3d(${p.tx * -2.5}px, ${p.ty * -1.8}px, 0)`;
@@ -101,10 +101,10 @@ export default function ComingSoon() {
     return () => cancelAnimationFrame(frame);
   }, [reducedMotion, customCursor]);
 
-  const onStageMove = useCallback(
-    (event: MouseEvent<HTMLDivElement>) => {
+  const onHeroMove = useCallback(
+    (event: MouseEvent<HTMLElement>) => {
       if (reducedMotion) return;
-      const rect = stageRef.current?.getBoundingClientRect();
+      const rect = heroRef.current?.getBoundingClientRect();
       if (!rect) return;
 
       const nx = ((event.clientX - rect.left) / rect.width - 0.5) * 2;
@@ -115,7 +115,7 @@ export default function ComingSoon() {
     [reducedMotion],
   );
 
-  const onStageLeave = useCallback(() => {
+  const onHeroLeave = useCallback(() => {
     parallax.current.x = 0;
     parallax.current.y = 0;
   }, []);
@@ -154,16 +154,23 @@ export default function ComingSoon() {
         </>
       ) : null}
 
-      {/* Full-page fabric backdrop — continuous while scrolling */}
+      {/* Full-bleed fabric atmosphere — no framed box */}
       <div className="page-backdrop" aria-hidden="true">
-        <Image
-          src={HERO_IMAGE.src}
-          alt=""
-          fill
-          priority
-          className="object-cover object-center"
-          sizes="100vw"
-        />
+        <div
+          ref={backdropMediaRef}
+          className="page-backdrop__media will-change-transform"
+        >
+          <div className="hero-media absolute inset-0">
+            <Image
+              src={HERO_IMAGE.src}
+              alt={HERO_IMAGE.alt}
+              fill
+              priority
+              className="object-cover object-center"
+              sizes="100vw"
+            />
+          </div>
+        </div>
         <div className="page-backdrop__wash" />
         <div className="page-backdrop__vignette" />
       </div>
@@ -181,7 +188,13 @@ export default function ComingSoon() {
       </nav>
 
       <div className="relative z-10">
-        <section className="relative flex min-h-dvh items-center justify-center overflow-hidden px-3 py-6 sm:px-8 sm:py-10 md:px-12">
+        <section
+          ref={heroRef}
+          onMouseMove={onHeroMove}
+          onMouseLeave={onHeroLeave}
+          className="relative flex min-h-dvh flex-col items-center justify-center overflow-hidden px-6 py-24 sm:px-10"
+          aria-label="Coming soon"
+        >
           <div
             className="ambient-light left-[6%] top-[10%]"
             aria-hidden="true"
@@ -193,92 +206,49 @@ export default function ComingSoon() {
           />
 
           <div
-            ref={stageRef}
-            onMouseMove={onStageMove}
-            onMouseLeave={onStageLeave}
-            className="stage relative flex h-[min(92dvh,980px)] w-full max-w-[1280px] flex-col overflow-hidden rounded-[2px] bg-cream/20 md:h-[min(86dvh,860px)]"
+            ref={copyRef}
+            className="relative z-10 flex w-full max-w-[720px] flex-col items-center text-center will-change-transform"
           >
-            {/* Fashion hero — replace HERO_IMAGE.src to swap campaign visual */}
-            <div className="pointer-events-none absolute inset-0 overflow-hidden">
+            <div className="logo-reveal relative mx-auto mb-10 w-[min(78vw,360px)] sm:mb-12 sm:w-[min(54vw,420px)] md:mb-14 md:w-[440px]">
               <div
-                ref={mediaRef}
-                className="absolute inset-[-5%] will-change-transform"
-              >
-                <div className="hero-media h-full w-full will-change-transform">
-                  <Image
-                    src={HERO_IMAGE.src}
-                    alt={HERO_IMAGE.alt}
-                    width={HERO_IMAGE.width}
-                    height={HERO_IMAGE.height}
-                    priority
-                    className="h-full w-full object-cover"
-                    sizes="(max-width: 768px) 100vw, 1280px"
-                  />
-                </div>
-              </div>
-              <div
-                className="absolute inset-0 bg-[linear-gradient(180deg,rgba(244,239,230,0.62)_0%,rgba(244,239,230,0.22)_30%,rgba(26,20,16,0.22)_58%,rgba(26,20,16,0.62)_100%)]"
+                className="pointer-events-none absolute left-1/2 top-1/2 h-[140%] w-[120%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(244,239,230,0.55)_0%,rgba(244,239,230,0)_70%)]"
                 aria-hidden="true"
               />
-              <div
-                className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_35%,rgba(61,43,31,0.32)_100%)]"
-                aria-hidden="true"
+              <Image
+                src={LOGO.src}
+                alt={LOGO.alt}
+                width={LOGO.width}
+                height={LOGO.height}
+                priority
+                className="relative h-auto w-full select-none"
+                sizes="(max-width: 640px) 78vw, 440px"
               />
             </div>
 
-            <div className="meta-reveal relative z-10 flex items-start justify-between px-5 pt-5 sm:px-8 sm:pt-7 md:px-10">
-              <p className="font-sans text-[0.58rem] font-normal uppercase tracking-[0.42em] text-chocolate/85 sm:text-[0.62rem]">
-                Est. 2026
-              </p>
-              <p className="font-sans text-[0.58rem] font-normal uppercase tracking-[0.42em] text-chocolate/85 sm:text-[0.62rem]">
-                Oman
-              </p>
-            </div>
-
-            <div className="relative z-10 flex flex-1 flex-col items-center justify-center px-6 pb-10 pt-2 text-center sm:px-10 sm:pb-12">
-              <div ref={copyRef} className="will-change-transform">
-                <div className="logo-reveal relative mx-auto mb-10 w-[min(78vw,360px)] sm:mb-12 sm:w-[min(54vw,420px)] md:mb-14 md:w-[440px]">
-                  <div
-                    className="pointer-events-none absolute left-1/2 top-1/2 h-[140%] w-[120%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(244,239,230,0.55)_0%,rgba(244,239,230,0)_70%)]"
-                    aria-hidden="true"
-                  />
-                  <Image
-                    src={LOGO.src}
-                    alt={LOGO.alt}
-                    width={LOGO.width}
-                    height={LOGO.height}
-                    priority
-                    className="relative h-auto w-full select-none"
-                    sizes="(max-width: 640px) 78vw, 440px"
-                  />
-                </div>
-
-                <h1
-                  className="font-sans text-[clamp(1.55rem,6.2vw,4.1rem)] font-normal uppercase leading-none tracking-[0.26em] text-white sm:tracking-[0.36em]"
-                  aria-label="Coming Soon"
-                >
-                  <span className="inline-block pl-[0.26em] sm:pl-[0.36em]">
-                    {TITLE.split("").map((char, index) => (
-                      <span
-                        key={`${char}-${index}`}
-                        className="char"
-                        style={
-                          {
-                            animationDelay: `${1 + index * 0.045}s`,
-                          } as CSSProperties
-                        }
-                      >
-                        {char === " " ? "\u00A0" : char}
-                      </span>
-                    ))}
+            <h1
+              className="font-sans text-[clamp(1.55rem,6.2vw,4.1rem)] font-normal uppercase leading-none tracking-[0.26em] text-ink sm:tracking-[0.36em]"
+              aria-label="Coming Soon"
+            >
+              <span className="inline-block pl-[0.26em] sm:pl-[0.36em]">
+                {TITLE.split("").map((char, index) => (
+                  <span
+                    key={`${char}-${index}`}
+                    className="char"
+                    style={
+                      {
+                        animationDelay: `${1 + index * 0.045}s`,
+                      } as CSSProperties
+                    }
+                  >
+                    {char === " " ? "\u00A0" : char}
                   </span>
-                </h1>
+                ))}
+              </span>
+            </h1>
 
-                <p className="tagline-reveal mt-6 font-display text-[1.05rem] font-light italic tracking-wide text-beige sm:mt-7 sm:text-[1.22rem]">
-                  Something worth waiting for.
-                </p>
-              </div>
-            </div>
+            <p className="tagline-reveal mt-6 font-display text-[1.05rem] font-light italic tracking-wide text-brown sm:mt-7 sm:text-[1.22rem]">
+              Something worth waiting for.
+            </p>
           </div>
         </section>
 
