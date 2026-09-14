@@ -1,0 +1,139 @@
+@import "tailwindcss";
+
+:root {
+  --sukoon-milk: #f4efe6;
+  --sukoon-cream: #ebe3d6;
+  --sukoon-sand: #c4a882;
+  --sukoon-taupe: #8a7360;
+  --sukoon-brown: #3d2b1f;
+  --sukoon-ink: #1a1410;
+  --sukoon-white: #fffcf7;
+
+  --background: var(--sukoon-milk);
+  --foreground: var(--sukoon-ink);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-milk: var(--sukoon-milk);
+  --color-cream: var(--sukoon-cream);
+  --color-sand: var(--sukoon-sand);
+  --color-taupe: var(--sukoon-taupe);
+  --color-brown: var(--sukoon-brown);
+  --color-ink: var(--sukoon-ink);
+  --font-display: var(--font-cormorant);
+  --font-sans: var(--font-jost);
+}
+
+html {
+  color-scheme: only light;
+  background: var(--sukoon-milk);
+}
+
+body {
+  background: var(--sukoon-milk);
+  color: var(--sukoon-ink);
+  font-family: var(--font-jost), ui-sans-serif, system-ui, sans-serif;
+  overflow-x: hidden;
+}
+
+/* Soft film grain — extremely subtle */
+.noise {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  opacity: 0.045;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 180px 180px;
+  animation: grain-drift 18s steps(2) infinite;
+}
+
+@keyframes grain-drift {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(-1.5%, 1%);
+  }
+  50% {
+    transform: translate(1%, -1.5%);
+  }
+  75% {
+    transform: translate(-0.5%, -1%);
+  }
+}
+
+@keyframes fade-rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes soft-breathe {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.55;
+    transform: scale(1.04);
+  }
+}
+
+.animate-page {
+  animation: fade-in 1.6s ease-out both;
+}
+
+.animate-logo {
+  animation: fade-rise 1.8s cubic-bezier(0.22, 1, 0.36, 1) 0.35s both;
+}
+
+.animate-soon {
+  animation: fade-rise 1.6s cubic-bezier(0.22, 1, 0.36, 1) 1.1s both;
+}
+
+.animate-tagline {
+  animation: fade-rise 1.5s cubic-bezier(0.22, 1, 0.36, 1) 1.55s both;
+}
+
+.animate-instagram {
+  animation: fade-in 1.8s ease-out 2.2s both;
+}
+
+.glow-orb {
+  animation: soft-breathe 14s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .noise,
+  .glow-orb,
+  .animate-page,
+  .animate-logo,
+  .animate-soon,
+  .animate-tagline,
+  .animate-instagram {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
