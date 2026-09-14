@@ -1,6 +1,6 @@
 # Sukoon
 
-A minimal coming soon page for **Sukoon**, a modern clothing brand.
+A cinematic coming-soon teaser for **Sukoon**, a modern clothing brand.
 
 ## Run locally
 
@@ -16,6 +16,11 @@ Open [http://localhost:3000](http://localhost:3000).
 - Next.js (App Router)
 - TypeScript
 - Tailwind CSS
-- Google Fonts: Cormorant Garamond + Jost
+- Cormorant Garamond + Jost
 
-No backend, forms, or third-party services — just a single-screen editorial landing page.
+## Assets
+
+- `public/sukoon-logo.png` — official brand mark (transparent)
+- `public/sukoon-fabric-hero.jpg` — fashion campaign hero
+
+To swap the fashion image later, change `HERO_IMAGE` in `src/components/ComingSoon.tsx`.
