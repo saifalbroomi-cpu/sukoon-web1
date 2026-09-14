@@ -134,6 +134,16 @@ export default function ComingSoon() {
     document.documentElement.classList.toggle("cursor-hover", active);
   };
 
+  const scrollToVision = (event: MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+    const target = document.getElementById("our-vision");
+    if (!target) return;
+    target.scrollIntoView({
+      behavior: reducedMotion ? "auto" : "smooth",
+      block: "start",
+    });
+  };
+
   return (
     <>
       <div className="noise" aria-hidden="true" />
@@ -144,123 +154,149 @@ export default function ComingSoon() {
         </>
       ) : null}
 
-      <div className="relative bg-milk">
-        <section className="relative flex min-h-dvh items-center justify-center overflow-hidden px-3 py-6 sm:px-8 sm:py-10 md:px-12">
-        <div
-          className="ambient-light left-[6%] top-[10%]"
-          aria-hidden="true"
+      {/* Full-page fabric backdrop — continuous while scrolling */}
+      <div className="page-backdrop" aria-hidden="true">
+        <Image
+          src={HERO_IMAGE.src}
+          alt=""
+          fill
+          priority
+          className="object-cover object-center"
+          sizes="100vw"
         />
-        <div
-          className="ambient-light bottom-[6%] right-[4%]"
-          style={{ animationDelay: "-11s" } as CSSProperties}
-          aria-hidden="true"
-        />
+        <div className="page-backdrop__wash" />
+        <div className="page-backdrop__vignette" />
+      </div>
 
-        <div
-          ref={stageRef}
-          onMouseMove={onStageMove}
-          onMouseLeave={onStageLeave}
-          className="stage relative flex h-[min(92dvh,980px)] w-full max-w-[1280px] flex-col overflow-hidden rounded-[2px] bg-cream md:h-[min(86dvh,860px)]"
+      <nav className="site-nav" aria-label="Primary">
+        <a
+          href="#our-vision"
+          onClick={scrollToVision}
+          className="site-nav__link"
+          onMouseEnter={() => setHover(true)}
+          onMouseLeave={() => setHover(false)}
         >
-          {/* Fashion hero — replace HERO_IMAGE.src to swap campaign visual */}
-          <div className="pointer-events-none absolute inset-0 overflow-hidden">
-            <div
-              ref={mediaRef}
-              className="absolute inset-[-5%] will-change-transform"
-            >
-              <div className="hero-media h-full w-full will-change-transform">
-                <Image
-                  src={HERO_IMAGE.src}
-                  alt={HERO_IMAGE.alt}
-                  width={HERO_IMAGE.width}
-                  height={HERO_IMAGE.height}
-                  priority
-                  className="h-full w-full object-cover"
-                  sizes="(max-width: 768px) 100vw, 1280px"
-                />
-              </div>
-            </div>
-            <div
-              className="absolute inset-0 bg-[linear-gradient(180deg,rgba(244,239,230,0.62)_0%,rgba(244,239,230,0.22)_30%,rgba(26,20,16,0.22)_58%,rgba(26,20,16,0.62)_100%)]"
-              aria-hidden="true"
-            />
-            <div
-              className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_35%,rgba(61,43,31,0.32)_100%)]"
-              aria-hidden="true"
-            />
-          </div>
+          Our Vision
+        </a>
+      </nav>
 
-          <div className="meta-reveal relative z-10 flex items-start justify-between px-5 pt-5 sm:px-8 sm:pt-7 md:px-10">
-            <p className="font-sans text-[0.58rem] font-normal uppercase tracking-[0.42em] text-chocolate/85 sm:text-[0.62rem]">
-              Est. 2026
-            </p>
-            <p className="font-sans text-[0.58rem] font-normal uppercase tracking-[0.42em] text-chocolate/85 sm:text-[0.62rem]">
-              Oman
-            </p>
-          </div>
+      <div className="relative z-10">
+        <section className="relative flex min-h-dvh items-center justify-center overflow-hidden px-3 py-6 sm:px-8 sm:py-10 md:px-12">
+          <div
+            className="ambient-light left-[6%] top-[10%]"
+            aria-hidden="true"
+          />
+          <div
+            className="ambient-light bottom-[6%] right-[4%]"
+            style={{ animationDelay: "-11s" } as CSSProperties}
+            aria-hidden="true"
+          />
 
-          <div className="relative z-10 flex flex-1 flex-col items-center justify-center px-6 pb-4 pt-2 text-center sm:px-10">
-            <div ref={copyRef} className="will-change-transform">
-              <div className="logo-reveal relative mx-auto mb-10 w-[min(78vw,360px)] sm:mb-12 sm:w-[min(54vw,420px)] md:mb-14 md:w-[440px]">
-                <div
-                  className="pointer-events-none absolute left-1/2 top-1/2 h-[140%] w-[120%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(244,239,230,0.55)_0%,rgba(244,239,230,0)_70%)]"
-                  aria-hidden="true"
-                />
-                <Image
-                  src={LOGO.src}
-                  alt={LOGO.alt}
-                  width={LOGO.width}
-                  height={LOGO.height}
-                  priority
-                  className="relative h-auto w-full select-none"
-                  sizes="(max-width: 640px) 78vw, 440px"
-                />
-              </div>
-
-              <h1
-                className="font-sans text-[clamp(1.55rem,6.2vw,4.1rem)] font-normal uppercase leading-none tracking-[0.26em] text-white sm:tracking-[0.36em]"
-                aria-label="Coming Soon"
+          <div
+            ref={stageRef}
+            onMouseMove={onStageMove}
+            onMouseLeave={onStageLeave}
+            className="stage relative flex h-[min(92dvh,980px)] w-full max-w-[1280px] flex-col overflow-hidden rounded-[2px] bg-cream/20 md:h-[min(86dvh,860px)]"
+          >
+            {/* Fashion hero — replace HERO_IMAGE.src to swap campaign visual */}
+            <div className="pointer-events-none absolute inset-0 overflow-hidden">
+              <div
+                ref={mediaRef}
+                className="absolute inset-[-5%] will-change-transform"
               >
-                <span className="inline-block pl-[0.26em] sm:pl-[0.36em]">
-                  {TITLE.split("").map((char, index) => (
-                    <span
-                      key={`${char}-${index}`}
-                      className="char"
-                      style={
-                        {
-                          animationDelay: `${1 + index * 0.045}s`,
-                        } as CSSProperties
-                      }
-                    >
-                      {char === " " ? "\u00A0" : char}
-                    </span>
-                  ))}
-                </span>
-              </h1>
+                <div className="hero-media h-full w-full will-change-transform">
+                  <Image
+                    src={HERO_IMAGE.src}
+                    alt={HERO_IMAGE.alt}
+                    width={HERO_IMAGE.width}
+                    height={HERO_IMAGE.height}
+                    priority
+                    className="h-full w-full object-cover"
+                    sizes="(max-width: 768px) 100vw, 1280px"
+                  />
+                </div>
+              </div>
+              <div
+                className="absolute inset-0 bg-[linear-gradient(180deg,rgba(244,239,230,0.62)_0%,rgba(244,239,230,0.22)_30%,rgba(26,20,16,0.22)_58%,rgba(26,20,16,0.62)_100%)]"
+                aria-hidden="true"
+              />
+              <div
+                className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_35%,rgba(61,43,31,0.32)_100%)]"
+                aria-hidden="true"
+              />
+            </div>
 
-              <p className="tagline-reveal mt-6 font-display text-[1.05rem] font-light italic tracking-wide text-beige sm:mt-7 sm:text-[1.22rem]">
-                Something worth waiting for.
+            <div className="meta-reveal relative z-10 flex items-start justify-between px-5 pt-5 sm:px-8 sm:pt-7 md:px-10">
+              <p className="font-sans text-[0.58rem] font-normal uppercase tracking-[0.42em] text-chocolate/85 sm:text-[0.62rem]">
+                Est. 2026
+              </p>
+              <p className="font-sans text-[0.58rem] font-normal uppercase tracking-[0.42em] text-chocolate/85 sm:text-[0.62rem]">
+                Oman
               </p>
             </div>
-          </div>
 
-          <div className="ig-reveal relative z-10 flex justify-center px-5 pb-6 sm:pb-8">
-            <a
-              href={INSTAGRAM_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="ig-link font-sans text-[0.62rem] font-light tracking-[0.18em] text-beige transition-colors duration-500 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-sand sm:text-[0.68rem]"
-              aria-label="Sukoon on Instagram, @wearsukoon.om"
-              onMouseEnter={() => setHover(true)}
-              onMouseLeave={() => setHover(false)}
-            >
-              @wearsukoon.om
-            </a>
+            <div className="relative z-10 flex flex-1 flex-col items-center justify-center px-6 pb-10 pt-2 text-center sm:px-10 sm:pb-12">
+              <div ref={copyRef} className="will-change-transform">
+                <div className="logo-reveal relative mx-auto mb-10 w-[min(78vw,360px)] sm:mb-12 sm:w-[min(54vw,420px)] md:mb-14 md:w-[440px]">
+                  <div
+                    className="pointer-events-none absolute left-1/2 top-1/2 h-[140%] w-[120%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(244,239,230,0.55)_0%,rgba(244,239,230,0)_70%)]"
+                    aria-hidden="true"
+                  />
+                  <Image
+                    src={LOGO.src}
+                    alt={LOGO.alt}
+                    width={LOGO.width}
+                    height={LOGO.height}
+                    priority
+                    className="relative h-auto w-full select-none"
+                    sizes="(max-width: 640px) 78vw, 440px"
+                  />
+                </div>
+
+                <h1
+                  className="font-sans text-[clamp(1.55rem,6.2vw,4.1rem)] font-normal uppercase leading-none tracking-[0.26em] text-white sm:tracking-[0.36em]"
+                  aria-label="Coming Soon"
+                >
+                  <span className="inline-block pl-[0.26em] sm:pl-[0.36em]">
+                    {TITLE.split("").map((char, index) => (
+                      <span
+                        key={`${char}-${index}`}
+                        className="char"
+                        style={
+                          {
+                            animationDelay: `${1 + index * 0.045}s`,
+                          } as CSSProperties
+                        }
+                      >
+                        {char === " " ? "\u00A0" : char}
+                      </span>
+                    ))}
+                  </span>
+                </h1>
+
+                <p className="tagline-reveal mt-6 font-display text-[1.05rem] font-light italic tracking-wide text-beige sm:mt-7 sm:text-[1.22rem]">
+                  Something worth waiting for.
+                </p>
+              </div>
+            </div>
           </div>
-        </div>
         </section>
 
         <OurVision />
+
+        <footer className="site-footer">
+          <a
+            href={INSTAGRAM_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="ig-link ig-reveal font-sans text-[0.62rem] font-light tracking-[0.18em] text-chocolate/80 transition-colors duration-500 hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brown sm:text-[0.68rem]"
+            aria-label="Sukoon on Instagram, @wearsukoon.om"
+            onMouseEnter={() => setHover(true)}
+            onMouseLeave={() => setHover(false)}
+          >
+            @wearsukoon.om
+          </a>
+        </footer>
       </div>
     </>
   );

@@ -30,10 +30,13 @@ export default function OurVision() {
 
   return (
     <section
+      id="our-vision"
       ref={sectionRef}
-      className="vision-section relative overflow-hidden bg-milk px-6 py-28 sm:px-10 sm:py-36 md:py-44"
+      className="vision-section relative scroll-mt-24 overflow-hidden px-6 py-28 sm:px-10 sm:py-36 md:py-44"
       aria-labelledby="our-vision-heading"
     >
+      {/* Soft wash so fabric shows through while keeping type readable */}
+      <div className="vision-wash" aria-hidden="true" />
       <div className="vision-glow" aria-hidden="true" />
 
       <div className="relative mx-auto flex max-w-[34rem] flex-col items-center text-center md:max-w-[38rem]">
