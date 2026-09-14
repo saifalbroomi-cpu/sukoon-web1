@@ -19,18 +19,18 @@ const jost = Jost({
 export const metadata: Metadata = {
   title: "Sukoon — Coming Soon",
   description:
-    "Sukoon is a modern clothing brand. Something worth waiting for.",
+    "Sukoon is a modern clothing brand from Oman. Something worth waiting for.",
   openGraph: {
     title: "Sukoon — Coming Soon",
     description:
-      "Sukoon is a modern clothing brand. Something worth waiting for.",
+      "Sukoon is a modern clothing brand from Oman. Something worth waiting for.",
     type: "website",
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: "Sukoon — Coming Soon",
     description:
-      "Sukoon is a modern clothing brand. Something worth waiting for.",
+      "Sukoon is a modern clothing brand from Oman. Something worth waiting for.",
   },
 };
 
