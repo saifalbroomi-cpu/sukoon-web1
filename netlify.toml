@@ -1,0 +1,11 @@
+# Netlify — Sukoon (wearsukoon.online)
+# Next.js is auto-detected via Netlify’s OpenNext adapter (no plugin pin needed).
+
+[build]
+  command = "npm run build"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# Optional: enable Next.js skew protection in Netlify UI env vars:
+# NETLIFY_NEXT_SKEW_PROTECTION = true
